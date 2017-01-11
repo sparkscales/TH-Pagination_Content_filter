@@ -7,6 +7,8 @@
 // Create and add a search bar
 // Add pagination to the page based on the amount of students being displayed on search results
 
+
+
 // Get Students
 var $students = $('.student-item');
 
@@ -17,9 +19,9 @@ var currentPage = 0;
 // Get the number of pages
 var pages = Math.ceil($students.length / studentsPerPage);
 var studentlist = breakUpStudents();
-var studentListContiner = $('.student-list');
+var studentListContainer = $('.student-list');
 
-  $students.hide();
+  $students.remove();
 // breakup students
 function breakUpStudents() {
   var list = $students.slice();
@@ -29,8 +31,21 @@ function breakUpStudents() {
   }
   console.log(newStudentsArray);
   return newStudentsArray;
-
 }
+
+$('.page').append($("<div class='pagination'><ul></ul></div>"));
+
+// genereate pagination links
+function generatePagination() {
+  for (var i = 1; i <= pages; i++) {
+    $(".pagination").append($("<li><a>" + i + "</a></li>"));
+  }
+}
+
+// Create and append search
+$(".page-header").append($("<div class='student-search'><input placeholder='Search for students...'><button>Search</button></div>"));
+
+
 
 
 // access and print the html in an array
@@ -38,14 +53,16 @@ function breakUpStudents() {
 function outputPages() {
 
 // loop over the items in the array containing the 5 arrays of html
+
   for(var i = 0; i < studentlist.length; i++ ) {
     console.log(i);
-    studentListContiner.append (studentlist[0][0]);
+    // studentlist[i].show();
+      studentListContainer.append(studentlist[i]);
 
 
     // display only the array with the matching current page
-    if( currentPage === i ) {
-        studentlist.show();
-    }
+    // if( currentPage === i ) {
+    //     studentlist.show();
+    // }
   }
 }
