@@ -70,26 +70,29 @@ $('button').on("click", search);
 
 
 function search() {
-  var search = $('.student-search input');
-  var searchContent = search.val().toLowerCase();
-    $students.remove();
+  var searchContent = $('.student-search input').val().toLowerCase();
+
+
+  $students.remove();
   // grab the value of the search field and compare it against the array of students
 
   // Append the students that match the earch string
   //
-  // for(var i = 0; i < studentlist.length; i++) {
-  //   var details = $('.student-details h3').text();
-  //   if(details.indexOf(searchContent) != -1 ) {
-  //     studentListContainer.append(studentlist[i]);
-  //   }
-  //   // if(details.indexOf())
-  // }
-
   for(var i = 0; i < studentlist.length; i++) {
-    var index = 0;
-      if(searchContent) {
-        index = 
-      }
+
+
+    console.log('loop' + i);
+    for(var j = 0; j < studentlist[i].length; j++) {
+
+    var details = $(this + '.student-details h3').text().toLowerCase();
+      console.log('loop ' + i + j );
+      console.log(details);
+      if(details.indexOf(searchContent) >= 0  ) {
+          studentListContainer.append(studentlist[i][j]);
+          console.log("fired");
+        }
+    }
+    // if(details.indexOf())
   }
 
 }
