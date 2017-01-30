@@ -1,113 +1,97 @@
-// var items = document.getElementsByClassName("student-item");
-//
-// var itemsPerPage = 10;
-//
-// // var pageContainers =
+// "use strict";
 
-// Create and add a search bar
-// Add pagination to the page based on the amount of students being displayed on search results
-
-
-
-// Get Students
-var $students = $('.student-item');
-
-// Set the number of students per page
+// Variables
+var $studentItems = $('.student-item');
+var studentSearch ='<div class="student-search"><input id="search" placeholder="Search for students..."><button>Search</button></div>';
+var pagination ='<div class="pagination"><ul></ul></div>';
 var studentsPerPage = 10;
+var studentList = breakUpStudents();
 
-var currentPage = 1;
-// Get the number of pages
-var pages = Math.ceil($students.length / studentsPerPage);
-var studentlist = breakUpStudents();
-var studentListContainer = $('.student-list');
+// Appends the search to the header
+$('.page-header').append(studentSearch);
 
-  $students.remove();
-  outputPages(0);
-
-// Create a new array of students and split them up based on the number of students per page
+// grab the array and split up the students into groups inside array
 function breakUpStudents() {
-  var list = $students.slice();
+	// Create a new array to store the old list of students
+  var list = $studentItems.slice();
+	// Empty array to store the newly broken up students
   var newStudentsArray = [];
+	// whiel loop that iterates through all the students and breaks them up into groups of 10 (based on the number assigned of studentsPerPage)
   while (list.length) {
+		// breaks up the array into groups of 10
     newStudentsArray.push(list.splice(0,studentsPerPage));
   }
   // console.log(newStudentsArray);
+	// return the new broken up array
   return newStudentsArray;
 }
-// Append pagination to the page
+function showPages() {
+	// Hides the list of students to reset the view
+  $studentItems.hide();
+ // loop that iterates through the student list
+  $.each(studentList, function(index, page){
+		// if the page number equals the index
+      if ( 0 === index) {
+				// loop through the items in the selected page
+        $.each(page, function(i, listItem){
+					// i equals the looping variable and listItem is the value associateted with i
+					// fadeIn all the items within the selected array
+          $(listItem).fadeIn('fast');
+        });
+      }
+  });
+}
+// Appends the the pagination and also figures out how many pages it needs
+function appendButtons(pageList) {
+	// append the pagination list to the page
+	$('.page').append(pagination);
+	// get the amount of pages based onthe students
+	var numPages = studentList.length;
+	// loop through the number of pages and output the list items
+	for (var i = 1; i <= numPages; i++) {
+		// store the buttons in a variable
+		var buttons = '<li><a href="#">' + i + '</a></li>';
+		// appends button to pagination
+		$('.pagination ul').append(buttons);
+	}
+	$('.pagination ul li a').first().addClass('active');
 
-$('.page').append($("<div class='pagination'><ul></ul></div>"));
-generatePagination();
-
-function generatePagination() {
-  $(".pagination li").remove();
-  for (var i = 1; i <= pages; i++) {
-    $(".pagination").append($("<li><a >" + i + "</a></li>"));
-  }
-// assign pagination to the array
+	  $(".pagination ul li a").on("click", function(e) {
+	    var pageSelection = parseInt($(this)[0].text) - 1;
+	    showPages(pageSelection, pageList);
+	    $(".pagination ul li a").removeClass();
+	    $(this).addClass("active");
+	    e.preventDefault();
+	  });
 }
 
-// Toggle class and select differetn array of students based on pagination
-$('.pagination li a').on("click", function() {
-  $('.pagination li a').removeClass("active");
-  $(this).addClass("active");
-  for(var index = 0; index <= studentlist.length; index++ ) {
-    if(parseInt($(this).text()) == index + 1 ) {
-      outputPages(index);
-      console.log('output-fired');
-    }
-  }
-});
 
+// function searchList() {
+//     var searchTerm = $('#search').val().toLowerCase().trim();
+//
+//         var filteredStudents = studentItems.filter(function(i) {
+//         	var studentEmail = $(this).find('.email').text();
+//             var studentNames = $(this).find('h3').text();
+//             if (studentNames.indexOf(searchTerm) > -1 || studentEmail.indexOf(searchTerm) > -1) {
+//                 return true;
+//             }
+//             return false;
+//         });
+//         if (filteredStudents.length === 0 ) {
+//         	$('.page-header h2').text('No Results');
+//         } else {
+//         	$('.page-header h2').text('STUDENTS');
+//         }
+//         var paginated_students = pages(filteredStudents);
+//         $('.pagination').remove();
+//         if (filteredStudents.length >= 10) {
+//           appendButtons(paginated_students);
+//         }
+//         showPages(0, paginated_students);
+// }
 
-// Create and append search
-$(".page-header").append($("<div class='student-search'><input placeholder='Search for students...'><button>Search</button></div>"));
+// appendButtons(studentList);
+// showPages(0, studentList);
 
-// On click of the submit button grab the value of the search field and filter out the content based on the value
-
-$('button').on("click", search);
-
-
-
-function search() {
-  var searchContent = $('.student-search input').val().toLowerCase();
-
-
-  $students.remove();
-  // grab the value of the search field and compare it against the array of students
-
-  // Append the students that match the earch string
-  //
-  for(var i = 0; i < studentlist.length; i++) {
-
-
-    console.log('loop' + i);
-    for(var j = 0; j < studentlist[i].length; j++) {
-
-    var details = $(this + '.student-details h3').text().toLowerCase();
-      console.log('loop ' + i + j );
-      console.log(details);
-      if(details.indexOf(searchContent) >= 0  ) {
-          studentListContainer.append(studentlist[i][j]);
-          console.log("fired");
-        }
-    }
-    // if(details.indexOf())
-  }
-
-}
-
-// access and print the html in an array
-
-function outputPages(lpage) {
-  // remove the content before outputting more students
-  $students.remove();
-  // Loop through the studentslist array
-  for(var i = 0; i < studentlist.length; i++ ) {
-    console.log(i);
-    // conditional if the number equals the index loop and append the contents
-    if(lpage === i ) {
-      studentListContainer.append(studentlist[i]);
-    }
-  }
-}
+// $('.student-search').find('button').on('click', searchList);
+// $('.student-search').find('input').keyup(searchList);
